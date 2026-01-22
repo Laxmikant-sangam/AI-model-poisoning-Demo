@@ -2,9 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==========================================
-# STEP 1: PREPARE THE DATA
-# ==========================================
+# STEP 1: PREPARE THE DATA 
 print("Loading MNIST Database (Handwritten digits)...")
 mnist = tf.keras.datasets.mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -16,9 +14,8 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 x_train = x_train[..., tf.newaxis]
 x_test = x_test[..., tf.newaxis]
 
-# ==========================================
+
 # STEP 2: BUILD & TRAIN THE AI MODEL
-# ==========================================
 def create_model():
     model = tf.keras.models.Sequential([
         # The "Eyes": Look for features (lines, curves)
@@ -40,9 +37,8 @@ print("Training the model... (This might take 1-2 minutes)")
 model = create_model()
 model.fit(x_train, y_train, epochs=3) 
 
-# ==========================================
+
 # STEP 3: THE ATTACK FUNCTION (FGSM)
-# ==========================================
 def fast_gradient_sign_method(input_image, input_label, model, epsilon):
     # Convert data to TensorFlow tensors
     input_image = tf.convert_to_tensor(input_image)
@@ -70,9 +66,7 @@ def fast_gradient_sign_method(input_image, input_label, model, epsilon):
     
     return adversarial_image, noise
 
-# ==========================================
 # STEP 4: RUN THE ATTACK
-# ==========================================
 # Pick a random image (Index 12 is usually a '9')
 image_index =  12
 image = x_test[image_index]
@@ -97,9 +91,8 @@ adv_logits = model(adv_image)
 adv_label = tf.argmax(adv_logits[0])
 print(f"AI PREDICTION (ATTACKED): {adv_label.numpy()}")
 
-# ==========================================
+
 # STEP 5: VISUALIZE RESULTS
-# ==========================================
 plt.figure(figsize=(10, 4))
 
 # Original
@@ -121,4 +114,5 @@ plt.imshow(adv_image[0].numpy().squeeze(), cmap='gray')
 plt.axis('off')
 
 print("Displaying image... Check the popup window!")
+
 plt.show()
